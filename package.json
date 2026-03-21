@@ -1,0 +1,18 @@
+{
+  "name": "barber-shop",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=@barber-shop/backend\" \"npm run dev --workspace=@barber-shop/frontend\"",
+    "build": "npm run build --workspace=@barber-shop/shared && npm run build --workspace=@barber-shop/backend && npm run build --workspace=@barber-shop/frontend",
+    "db:migrate": "npm run db:migrate --workspace=@barber-shop/backend",
+    "db:seed": "npm run db:seed --workspace=@barber-shop/backend",
+    "db:studio": "npm run db:studio --workspace=@barber-shop/backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
