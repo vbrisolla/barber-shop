@@ -15,7 +15,7 @@ export default function LandingPage() {
       <section className="bg-gray-900 text-white py-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-6 text-brand-400">Barbearia Premium</h1>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             Cortes modernos, barba impecável. Agende seu horário com os melhores barbeiros da cidade.
           </p>
           <div className="flex gap-4 justify-center">
