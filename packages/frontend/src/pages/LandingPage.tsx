@@ -12,7 +12,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="bg-gray-900 text-white py-24 px-4">
+      <section className="bg-gray-100 text-gray-900 dark:bg-gray-950 dark:text-white py-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-6 text-brand-400">Barbearia Premium</h1>
           <p className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
@@ -57,7 +57,7 @@ export default function LandingPage() {
       </section>
 
       {/* Barbers */}
-      <section className="py-16 px-4 bg-gray-50 dark:bg-gray-950">
+      <section className="py-16 px-4 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Nossos Barbeiros</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -77,7 +77,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 px-4 bg-brand-600 text-white text-center">
+      <section className="py-10 px-4 bg-brand-600 text-white text-center">
         <h2 className="text-3xl font-bold mb-4">Pronto para um novo visual?</h2>
         <p className="text-brand-100 mb-8">Agende online em menos de 2 minutos.</p>
         <Link to={user ? '/booking' : '/register'} className="bg-white text-brand-600 font-bold px-8 py-3 rounded-lg hover:bg-brand-50 transition-colors inline-block">

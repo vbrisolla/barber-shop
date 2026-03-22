@@ -16,8 +16,8 @@ export default function Navbar() {
     <nav className="bg-gray-900 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 font-bold text-xl text-brand-400">
-            <span>Barbearia</span>
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="BSAR Barbearia" className="h-14 w-auto" />
           </Link>
 
           <div className="flex items-center gap-4">
