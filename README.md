@@ -1,4 +1,4 @@
-# Barber Shop - Sistema de Agendamento
+# BSAR Barbearia - Sistema de Agendamento
 
 Sistema completo de agendamento para barbearia em monorepo com Node.js, React e PostgreSQL.
 
@@ -11,7 +11,6 @@ Sistema completo de agendamento para barbearia em monorepo com Node.js, React e 
 - **Tipos Compartilhados**: pacote `@barber-shop/shared`
 
 ## Estrutura
-
 ```
 barber-shop/
 ├── packages/
@@ -32,33 +31,26 @@ barber-shop/
 ## Instalação e Execução
 
 ### 1. Instalar dependências
-
 ```bash
 npm install
 ```
 
 ### 2. Subir o banco de dados
-
 ```bash
 docker-compose up -d
 ```
 
-Aguarde alguns segundos para o PostgreSQL inicializar.
-
 ### 3. Executar migrations
-
 ```bash
 npm run db:migrate
 ```
 
 ### 4. Popular banco com dados de exemplo
-
 ```bash
 npm run db:seed
 ```
 
 ### 5. Iniciar o servidor de desenvolvimento
-
 ```bash
 npm run dev
 ```
@@ -73,16 +65,44 @@ npm run dev
 
 ## Credenciais de Teste
 
-| Tipo    | Email                      | Senha     |
-|---------|----------------------------|-----------|
-| Admin   | admin@barbearia.com        | admin123  |
-| Barbeiro | joao@barbearia.com        | barber123 |
-| Barbeiro | pedro@barbearia.com       | barber123 |
-| Cliente  | carlos@email.com          | client123 |
+| Tipo     | Email                | Senha     |
+|----------|----------------------|-----------|
+| Admin    | admin@barbearia.com  | admin123  |
+| Barbeiro | joao@barbearia.com   | barber123 |
+| Barbeiro | pedro@barbearia.com  | barber123 |
+| Cliente  | carlos@email.com     | client123 |
 
 ### pgAdmin
 - Email: admin@barber.com
 - Senha: admin123
+
+## Funcionalidades
+
+### Agendamento
+- Fluxo em 3 etapas: serviço → barbeiro → horário
+- Verificação de conflito de horários em tempo real
+- Bloqueio de datas passadas e dias sem disponibilidade
+
+### Reagendamento
+- Cliente pode reagendar agendamentos com status PENDING ou CONFIRMED
+- Calendário interativo para seleção de nova data
+- Grade de horários disponíveis atualizada automaticamente
+- Validação de conflitos e disponibilidade do barbeiro
+
+### Área do Cliente
+- Dashboard com próximos agendamentos
+- Histórico completo com filtros por status
+- Cancelamento e reagendamento online
+
+### Área Admin
+- Gestão de todos os agendamentos
+- CRUD completo de serviços
+- Gerenciamento de barbeiros e disponibilidade
+
+### Landing Page
+- Carrossel de fotos do espaço da barbearia com modal de visualização em tela cheia
+- Listagem de serviços e barbeiros
+- Rodapé com endereço e link direto para o Google Maps
 
 ## API Endpoints
 
@@ -107,6 +127,7 @@ npm run dev
 - `GET /api/appointments` — Listar agendamentos do usuário
 - `POST /api/appointments` — Criar agendamento
 - `PATCH /api/appointments/:id/status` — Atualizar status
+- `PATCH /api/appointments/:id/reschedule` — Reagendar agendamento
 - `DELETE /api/appointments/:id` — Deletar agendamento
 
 ## Regras de Negócio
@@ -114,11 +135,10 @@ npm run dev
 1. Não é permitido agendar em horários já ocupados
 2. Não é permitido agendar fora da disponibilidade do barbeiro
 3. Não é permitido agendar datas passadas
-4. Clientes só podem cancelar agendamentos PENDING ou CONFIRMED
+4. Clientes só podem cancelar ou reagendar agendamentos PENDING ou CONFIRMED
 5. JWT expira em 7 dias
 
 ## Scripts Disponíveis
-
 ```bash
 npm run dev          # Inicia backend + frontend em paralelo
 npm run build        # Build de todos os pacotes
