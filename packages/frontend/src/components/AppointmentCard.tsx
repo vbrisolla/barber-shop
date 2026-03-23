@@ -1,10 +1,14 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import type { AppointmentDTO } from '@barber-shop/shared';
+import type { AppointmentDTO, TimeSlot } from '@barber-shop/shared';
 import { AppointmentStatus } from '@barber-shop/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { appointmentsApi } from '../api/appointments';
+import { barbersApi } from '../api/barbers';
 import { useAuth } from '../contexts/AuthContext';
+import { useState } from 'react';
+import BookingCalendar from './BookingCalendar';
+import TimeSlotPicker from './TimeSlotPicker';
 
 const STATUS_LABELS: Record<AppointmentStatus, string> = {
   PENDING: 'Pendente',
@@ -29,6 +33,9 @@ interface Props {
 export default function AppointmentCard({ appointment, showClient = false, showActions = true }: Props) {
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
+  const [showReschedule, setShowReschedule] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const cancelMutation = useMutation({
     mutationFn: () =>
@@ -48,7 +55,35 @@ export default function AppointmentCard({ appointment, showClient = false, showA
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appointments'] }),
   });
 
+  const rescheduleMutation = useMutation({
+    mutationFn: () => {
+      const [h, m] = selectedTime!.split(':');
+      const dt = new Date(selectedDate!);
+      dt.setHours(Number(h), Number(m), 0, 0);
+      return appointmentsApi.reschedule(appointment.id, { scheduledAt: dt.toISOString() });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      setShowReschedule(false);
+      setSelectedDate(null);
+      setSelectedTime(null);
+    },
+  });
+
+  const dateStr = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : undefined;
+
+  const { data: availabilityData, isLoading: loadingSlots } = useQuery({
+    queryKey: ['availability', appointment.barber?.id, dateStr, appointment.serviceId],
+    queryFn: () =>
+      barbersApi.getAvailability(appointment.barber!.id, dateStr, appointment.serviceId),
+    enabled: !!showReschedule && !!selectedDate && !!appointment.barber?.id,
+  });
+
+  const slots: TimeSlot[] =
+    availabilityData && 'slots' in availabilityData ? availabilityData.slots : [];
+
   const canCancel = ['PENDING', 'CONFIRMED'].includes(appointment.status);
+  const canReschedule = ['PENDING', 'CONFIRMED'].includes(appointment.status);
 
   return (
     <div className="card hover:shadow-md transition-shadow">
@@ -100,6 +135,14 @@ export default function AppointmentCard({ appointment, showClient = false, showA
                 Concluir
               </button>
             )}
+            {canReschedule && (
+              <button
+                onClick={() => setShowReschedule(!showReschedule)}
+                className="bg-brand-500 text-white text-xs py-1 px-3 rounded-lg hover:bg-brand-600 transition-colors"
+              >
+                {showReschedule ? 'Fechar' : 'Reagendar'}
+              </button>
+            )}
             {canCancel && (
               <button
                 onClick={() => cancelMutation.mutate()}
@@ -112,6 +155,64 @@ export default function AppointmentCard({ appointment, showClient = false, showA
           </div>
         )}
       </div>
+
+      {showReschedule && (
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+            Escolha nova data e horário:
+          </p>
+
+          <BookingCalendar
+            selected={selectedDate}
+            onChange={(date) => {
+              setSelectedDate(date);
+              setSelectedTime(null);
+            }}
+          />
+
+          {selectedDate && (
+            <div className="mt-4">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Horários disponíveis:
+              </p>
+              <TimeSlotPicker
+                slots={slots}
+                selected={selectedTime}
+                onChange={setSelectedTime}
+                loading={loadingSlots}
+              />
+            </div>
+          )}
+
+          {selectedDate && selectedTime && (
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={() => rescheduleMutation.mutate()}
+                disabled={rescheduleMutation.isPending}
+                className="btn-primary"
+              >
+                {rescheduleMutation.isPending ? 'Salvando...' : 'Confirmar Reagendamento'}
+              </button>
+              <button
+                onClick={() => {
+                  setShowReschedule(false);
+                  setSelectedDate(null);
+                  setSelectedTime(null);
+                }}
+                className="btn-secondary"
+              >
+                Cancelar
+              </button>
+            </div>
+          )}
+
+          {rescheduleMutation.isError && (
+            <p className="text-red-500 text-xs mt-2">
+              Erro ao reagendar. Verifique o horário e tente novamente.
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

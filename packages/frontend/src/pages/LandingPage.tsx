@@ -14,6 +14,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="bg-gray-100 text-gray-900 dark:bg-gray-950 dark:text-white py-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-5xl font-bold mb-6 text-brand-400">BSAR</h1>
           <h1 className="text-5xl font-bold mb-6 text-brand-400">Barbearia Premium</h1>
           <p className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             Cortes modernos, barba impecável. Agende seu horário com os melhores barbeiros da cidade.
@@ -28,7 +29,7 @@ export default function LandingPage() {
                 <Link to="/register" className="btn-primary text-lg px-8 py-3">
                   Criar Conta
                 </Link>
-                <Link to="/login" className="btn-secondary text-lg px-8 py-3 bg-transparent border-white text-white hover:bg-white hover:text-gray-900">
+                <Link to="/login" className="btn-secondary text-lg px-8 py-3">
                   Entrar
                 </Link>
               </>
@@ -79,7 +80,7 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="py-10 px-4 bg-brand-600 text-white text-center">
         <h2 className="text-3xl font-bold mb-4">Pronto para um novo visual?</h2>
-        <p className="text-brand-100 mb-8">Agende online em menos de 2 minutos.</p>
+        <p className="text-brand-50 mb-8">Agende online em menos de 2 minutos.</p>
         <Link to={user ? '/booking' : '/register'} className="bg-white text-brand-600 font-bold px-8 py-3 rounded-lg hover:bg-brand-50 transition-colors inline-block">
           {user ? 'Agendar Agora' : 'Começar Agora'}
         </Link>

@@ -1,11 +1,28 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import React from 'react';
 
 export default function Navbar() {
   const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const [visible, setVisible] = React.useState(true);
+  const lastScrollY = React.useRef(0);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY < lastScrollY.current) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   function handleLogout() {
     logout();
@@ -13,13 +30,13 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-gray-900 text-white shadow-lg">
+    <nav className={`bg-gray-900 text-white shadow-lg sticky top-0 z-50 transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105">
             <img src="/logo.png" alt="BSAR Barbearia" className="h-14 w-auto" />
+            <span className="hover:text-brand-400 transition-colors text-sm">BSAR Barbearia</span>
           </Link>
-
           <div className="flex items-center gap-4">
             <button
               onClick={toggleTheme}

@@ -7,4 +7,6 @@ export const appointmentsApi = {
   updateStatus: (id: string, data: UpdateAppointmentStatusRequest) =>
     api.patch<AppointmentDTO>(`/appointments/${id}/status`, data).then((r) => r.data),
   delete: (id: string) => api.delete(`/appointments/${id}`),
+  reschedule: (id: string, data: { scheduledAt: string }) =>
+    api.patch<AppointmentDTO>(`/appointments/${id}/reschedule`, data).then((r) => r.data),
 };
