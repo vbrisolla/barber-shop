@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { servicesApi } from '../api/services';
 import { barbersApi } from '../api/barbers';
 import { useAuth } from '../contexts/AuthContext';
+import Carrossel from '../components/Carrossel';
 
 export default function LandingPage() {
   const { user } = useAuth();
@@ -76,12 +77,22 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      
+      {/* Galeria */}
+      <section className="py-16 px-4 bg-white dark:bg-gray-900">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
+            Nosso Espaço
+          </h2>
+          <Carrossel />
+        </div>
+      </section>
 
       {/* CTA */}
-      <section className="py-10 px-4 bg-brand-600 text-white text-center">
+      <section className="py-10 px-4 bg-gray-100 text-gray-900 dark:bg-gray-950 dark:text-white text-center">
         <h2 className="text-3xl font-bold mb-4">Pronto para um novo visual?</h2>
-        <p className="text-brand-50 mb-8">Agende online em menos de 2 minutos.</p>
-        <Link to={user ? '/booking' : '/register'} className="bg-white text-brand-600 font-bold px-8 py-3 rounded-lg hover:bg-brand-50 transition-colors inline-block">
+        <p className="text-gray-900 dark:text-white mb-8">Agende online em menos de 2 minutos.</p>
+        <Link to={user ? '/booking' : '/register'} className="btn-primary text-lg px-8 py-3">
           {user ? 'Agendar Agora' : 'Começar Agora'}
         </Link>
       </section>

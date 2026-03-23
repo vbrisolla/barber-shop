@@ -56,7 +56,7 @@ export default function Navbar() {
             {user ? (
               <>
                 <Link to="/dashboard" className="hover:text-brand-400 transition-colors text-sm">
-                  Dashboard
+                  Painel Geral
                 </Link>
                 <Link to="/booking" className="hover:text-brand-400 transition-colors text-sm">
                   Agendar
